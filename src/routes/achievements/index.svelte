@@ -16,6 +16,6 @@
     <title>Achievements list</title>
 </svelte:head>
 
-
+<a href="add">Добавить достижение</a>
 <AchievementsList list={list} />
 

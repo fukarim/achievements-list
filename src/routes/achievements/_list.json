@@ -70,41 +70,5 @@
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
     "type": 0
-  },
-  {
-    "id": "",
-    "title": "Переезд в Санкт-Петербург",
-    "decription": "",
-    "logo": "imgs/logo-placeholder.png",
-    "photos": [
-      "photo-placeholder.jpg"
-    ],
-    "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
-    "unlocked": false,
-    "type": 0
-  },
-  {
-    "id": "",
-    "title": "Работа в другом городе",
-    "decription": "",
-    "logo": "imgs/logo-placeholder.png",
-    "photos": [
-      "photo-placeholder.jpg"
-    ],
-    "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
-    "unlocked": false,
-    "type": 0
-  },
-  {
-    "id": "",
-    "title": "Работа в другой стране",
-    "decription": "",
-    "logo": "imgs/logo-placeholder.png",
-    "photos": [
-      "photo-placeholder.jpg"
-    ],
-    "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
-    "unlocked": true,
-    "type": 0
   }
 ]
