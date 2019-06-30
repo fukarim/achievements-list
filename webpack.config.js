@@ -5,7 +5,7 @@ const prod = mode === 'production';
 
 module.exports = {
   entry: {
-    bundle: ['./src/main.js']
+    bundle: ['./src/client/main.js']
   },
   resolve: {
     extensions: ['.js', '.svelte']
@@ -15,6 +15,7 @@ module.exports = {
     filename: '[name].js',
     chunkFilename: '[name].[id].js'
   },
+  watch: !prod,
   module: {
     rules: [
       {
