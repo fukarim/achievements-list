@@ -1,14 +1,12 @@
 <script>
-    import Achievemetns from './routes/achievements/index.svelte';
+    import { Router, Route } from "svelte-routing";
+    import Achievements from './routes/achievements/index.svelte';
+    import Add from './routes/add/index.svelte';
 
-    export let name;
+    export let url = "";
 </script>
 
-<style>
-    h1 {
-        color: purple;
-    }
-</style>
-
-<h1>Hello {name}!</h1>
-<Achievemetns />
+<Router url="{url}">
+    <Route path="add" component="{Add}" />
+    <Route path="/" component="{Achievements}" />
+</Router>
