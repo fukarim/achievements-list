@@ -7,6 +7,8 @@
 </script>
 
 <Router url="{url}">
-    <Route path="add" component="{Add}" />
-    <Route path="/" component="{Achievements}" />
+    <div>
+        <Route path="add" component="{Add}" />
+        <Route path="/" component="{Achievements}" />
+    </div>
 </Router>
