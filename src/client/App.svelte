@@ -1,7 +1,8 @@
 <script>
     import { Router, Route } from "svelte-routing";
-    import Achievements from './routes/achievements/index.svelte';
-    import Add from './routes/add/index.svelte';
+
+    import Achievements from './routes/achievements';
+    import Add from './routes/add';
 
     export let url = "";
 </script>

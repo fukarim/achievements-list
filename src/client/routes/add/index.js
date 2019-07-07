@@ -1,11 +1,3 @@
-import fs from "fs";
+import Add from "./Add.svelte";
 
-export function post(req, res) {
-  res.writeHead(200, {
-    'Content-Type': 'application/json'
-  });
-
-  const body = req.body;
-
-  res.end({body, success: true});
-}
+export default Add;
