@@ -3,5 +3,6 @@ module.exports = function (app) {
   if (process.env.NODE_ENV === 'development') {
     require('./logger').init(app);
   }
+  require('./bodyParser').init(app);
   require('./errors').init(app);
 };

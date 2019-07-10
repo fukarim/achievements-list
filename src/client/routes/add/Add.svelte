@@ -9,9 +9,9 @@
         console.log("date", date);
         console.log("type", type);
 
-        const body= {title, desc, id, date, type};
+        const body = {title, desc, id, date, type};
 
-        fetch("/add", {
+        fetch("/achievements", {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -20,8 +20,6 @@
             credentials: 'same-origin',
             body: JSON.stringify(body)
         })
-                .then(response => {response.json()})
-                .then(data => console.log("data", data))
                 .catch(err => console.log(err));
 
         event.preventDefault();

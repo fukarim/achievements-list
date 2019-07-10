@@ -4,12 +4,14 @@
   "version": "0.0.1",
   "scripts": {
     "start-server": "cross-env NODE_ENV=development NODE_ICU_DATA=node_modules/full-icu nodemon ./src/server/server.js --watch src/server --watch public/App.js",
+    "start-server-debug": "cross-env NODE_ENV=development NODE_ICU_DATA=node_modules/full-icu nodemon ./src/server/server.js --watch src/server --watch public/App.js --inspect",
     "build": "rollup -c",
     "watch": "rollup -c -w"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
     "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",

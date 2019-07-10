@@ -2,7 +2,7 @@
   {
     "id": "mmb",
     "title": "Московский марш бросок (ММБ)",
-    "decription": "",
+    "description": "",
     "logo": "imgs/logo-placeholder.png",
     "photos": [
       "imgs/mmb/1.jpg"
@@ -14,7 +14,7 @@
   {
     "id": "Гонка героев",
     "title": "Гонка героев",
-    "decription": "",
+    "description": "",
     "logo": "imgs/logo-placeholder.png",
     "photos": [
       "photo-placeholder.jpg"
@@ -26,7 +26,7 @@
   {
     "id": "Диплом бакалавриата",
     "title": "Диплом бакалавриата",
-    "decription": "",
+    "description": "",
     "logo": "imgs/logo-placeholder.png",
     "photos": [
       "photo-placeholder.jpg"
@@ -38,7 +38,7 @@
   {
     "id": "",
     "title": "Диплом магистратуры",
-    "decription": "",
+    "description": "",
     "logo": "imgs/logo-placeholder.png",
     "photos": [
       "photo-placeholder.jpg"
@@ -50,7 +50,7 @@
   {
     "id": "",
     "title": "Водительские права",
-    "decription": "",
+    "description": "",
     "logo": "imgs/logo-placeholder.png",
     "photos": [
       "photo-placeholder.jpg"
@@ -62,7 +62,7 @@
   {
     "id": "",
     "title": "Первая работа front-end разработчиком",
-    "decription": "",
+    "description": "",
     "logo": "imgs/logo-placeholder.png",
     "photos": [
       "photo-placeholder.jpg"
