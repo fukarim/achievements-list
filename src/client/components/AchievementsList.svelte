@@ -1,7 +1,7 @@
 <script>
     export let list;
 
-    const DEFAULT_LOGO = "imgs/logo-placeholder.png";
+    const DEFAULT_LOGO = "logo-placeholder.png";
 
     function formatDate(dateTest) {
         const date = new Date(dateTest);

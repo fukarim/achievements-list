@@ -2,3 +2,5 @@
 node_modules
 public/bundle.*
 public/App.js
+static/imgs/*
+!static/imgs/logo-placeholder.png
