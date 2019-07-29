@@ -2,24 +2,31 @@ const fs = require("fs");
 const path = require("path");
 const Router = require('koa-router');
 
+const JsonFileStorage = require('../database/JsonFileStorage');
 const convertToId = require('../utils/convertToId');
 const saveImage = require('../utils/saveImage');
 
 const router = new Router();
 
-// TODO: add abstraction over reading and write into DB
+const listFileName = process.env.NODE_ENV === 'production'
+  ? process.env.DATA_FILE || 'list.json'
+  : 'default-list.json';
+
+const imagesFolderPath = `${process.cwd()}/static/imgs`;
+
+const dataStorage = new JsonFileStorage(`${process.cwd()}/data/${listFileName}`);
+
+function getImagesSubFolder(id) {
+  if (!fs.existsSync(`${imagesFolderPath}/${id}`)) {
+    fs.mkdirSync(`${imagesFolderPath}/${id}`);
+  }
+
+  return id
+}
 
 router.get("/achievements", async (ctx) => {
   try {
-    const list = await new Promise((resolve, reject) => {
-      fs.readFile(process.cwd() + '/data/list.json', (err, data) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(JSON.parse(data.toString()))
-      });
-    });
-
+    const list = await dataStorage.get();
     ctx.status = 200;
     ctx.body = list;
   } catch (err) {
@@ -32,31 +39,19 @@ router.get("/achievements", async (ctx) => {
 router.post("/achievements", async (ctx) => {
   try {
     const {title, desc, id, date, type} = ctx.request.body;
+    const generatedId = id || convertToId(title);
 
-    // TODO: use id instead of generated if it exists
-    const generatedId = convertToId(title);
-
-    // TODO: добавление папки (предварительная проверка)
-    // Добавлять папку, если есть картинки (не только картинка)
     const {logo, photos} = ctx.request.files;
 
-    // TODO: refactor usage of this two variables
-    const imagesFolderPath = `${process.cwd()}/static/imgs`;
-    let imagesSubFolder = "";
-    let photosNames = [];
-    if (Array.isArray(photos)) {
-      // TODO: change to promise
-      imagesSubFolder = generatedId;
-      if (!fs.existsSync(`${imagesFolderPath}/${imagesSubFolder}`)) {
-        fs.mkdirSync(`${imagesFolderPath}/${imagesSubFolder}`);
-      }
+    const imagesSubFolder = Array.isArray(photos) ? getImagesSubFolder(generatedId) : "";
 
-      photosNames = photos.map((photo, index) => {
+    const photosNames = Array.isArray(photos)
+      ? photos.map((photo, index) => {
         const photoName = `${generatedId}-image${index + 1}${path.extname(photo.name)}`;
         saveImage(photo, path.join(`${imagesFolderPath}/${imagesSubFolder}`, photoName));
         return `${imagesSubFolder}/${photoName}`
       })
-    }
+      : [];
 
     const logoName = logo.size > 0 ? `${generatedId}-logo${path.extname(logo.name)}` : "";
 
@@ -65,37 +60,17 @@ router.post("/achievements", async (ctx) => {
     }
 
     const newAchievement = {
-      // remove ?
-      id: id || generatedId,
+      id: generatedId,
       title,
       description: desc || "",
-      logo: logoName ? `${imagesSubFolder}/${logoName}`: logoName,
+      logo: logoName ? `${imagesSubFolder}/${logoName}` : logoName,
       photos: photosNames,
       date: date ? new Date(date) : new Date(),
       unlocked: false,
-      type: parseInt(type, 10)
+      type: Number(type)
     };
 
-    const list = await new Promise((resolve, reject) => {
-      fs.readFile(process.cwd() + '/data/list.json', (err, data) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(JSON.parse(data.toString()))
-      });
-    });
-
-    const newList = [...list, newAchievement];
-
-    // TODO: change to fsPromise (update node version)
-    await new Promise((resolve, reject) => {
-      fs.writeFile(process.cwd() + '/data/list.json', JSON.stringify(newList, null, 2), (err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve()
-      });
-    });
+    await dataStorage.crete(newAchievement);
 
     ctx.status = 200;
   } catch (err) {
