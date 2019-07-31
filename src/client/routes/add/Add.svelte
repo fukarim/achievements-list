@@ -1,25 +1,39 @@
 <script>
   import { navigate } from "svelte-routing";
 
-  let logoField, form, logoImage;
+  let form, logoImage;
+  let photoImages = [];
 
   function onLogoChange(event) {
-    // TODO: change to event.target
-    if (!logoField) {
+    if (!event.target) {
       return;
     }
 
-    if (logoField.files && logoField.files[0]) {
+    if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
 
       reader.onload = function(e) {
         logoImage = e.target.result
       };
 
-      reader.readAsDataURL(logoField.files[0]);
+      reader.readAsDataURL(event.target.files[0]);
     }
+  }
 
+  function onPhotosChange(event) {
+    photoImages = [];
 
+    if (event.target.files && event.target.files[0]) {
+      Array.from(event.target.files).map(file => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          photoImages = [...photoImages, e.target.result]
+        };
+
+        reader.readAsDataURL(file);
+      })
+    }
   }
 
   function onSubmit(event) {
@@ -53,12 +67,14 @@
   <label>
   {#if logoImage}
     <img src={logoImage} alt="logo-image" />
-  {/if}
-    Logo: <input type="file" name="logo" bind:this={logoField} on:change={onLogoChange}/>
+  {/if} Logo: <input type="file" name="logo" on:change={onLogoChange}/>
   </label>
 
+    {#each photoImages as photoImage, i}
+      <img src={photoImage} alt={`photo-image-${i}`} />
+    {/each}
   <label>
-    Photos: <input type="file" name="photos" multiple/>
+     Photos: <input type="file" name="photos" multiple on:change={onPhotosChange}/>
   </label>
     <!-- add photos -->
   <label>
