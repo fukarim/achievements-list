@@ -50,42 +50,5 @@
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
     "type": 2
-  },
-  {
-    "id": "860813557362982",
-    "title": "Поездка",
-    "description": "Поездка с палатками",
-    "logo": "860813557362982/860813557362982-logo.png",
-    "photos": [
-      "860813557362982/860813557362982-image1.png",
-      "860813557362982/860813557362982-image2.png"
-    ],
-    "date": "2019-07-23T00:00:00.000Z",
-    "unlocked": false,
-    "type": 2
-  },
-  {
-    "id": "",
-    "title": "",
-    "description": "",
-    "logo": "",
-    "photos": [],
-    "date": "2019-07-28T11:36:01.349Z",
-    "unlocked": false,
-    "type": 0
-  },
-  {
-    "id": "Supermatch",
-    "title": "Супер матч",
-    "description": "Очень круто",
-    "logo": "Supermatch/Supermatch-logo.jpg",
-    "photos": [
-      "Supermatch/Supermatch-image1.JPG",
-      "Supermatch/Supermatch-image2.jpg",
-      "Supermatch/Supermatch-image3.jpg"
-    ],
-    "date": "2019-07-28T00:00:00.000Z",
-    "unlocked": false,
-    "type": 1
   }
 ]
