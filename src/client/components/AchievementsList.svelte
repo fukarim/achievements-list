@@ -30,6 +30,18 @@
     }
 </script>
 
+<ul class="achievement-list">
+    {#each list as achievement}
+        <li class={getItemClasses(achievement)}>
+            <img class="achievement__logo" src={achievement.logo || DEFAULT_LOGO} alt={`${achievement.title} иконка`}>
+            <div>
+                <div class="achievement__title">{achievement.title}</div>
+                <div class="achievement__date">{formatDate(achievement.date)}</div>
+            </div>
+        </li>
+    {/each}
+</ul>
+
 <style>
     .achievement-list {
         list-style: none;
@@ -47,7 +59,6 @@
     }
 
     .achievement-list__item--locked {
-        border: 1px solid #999999;
         background-color: #cccccc;
         color: #666666;
     }
@@ -78,16 +89,4 @@
         color: grey;
     }
 </style>
-
-<ul class="achievement-list">
-    {#each list as achievement}
-        <li class={getItemClasses(achievement)}>
-            <img class="achievement__logo" src={achievement.logo || DEFAULT_LOGO} alt={`${achievement.title} иконка`}>
-            <div>
-                <div class="achievement__title">{achievement.title}</div>
-                <div class="achievement__date">{formatDate(achievement.date)}</div>
-            </div>
-        </li>
-    {/each}
-</ul>
 

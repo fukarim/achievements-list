@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
-    import {Link} from "svelte-routing";
 
+    import Button from '../../components/Button.svelte';
     import AchievementsList from '../../components/AchievementsList.svelte';
 
     let list = [];
@@ -16,6 +16,16 @@
     <title>Achievements list</title>
 </svelte:head>
 
-<Link to="add">Добавить достижение</Link>
+<Button href="add" className="add-achievement-button">Добавить достижение</Button>
 <AchievementsList list={list} />
+
+<style>
+    /* hack need for passing styles  https://github.com/sveltejs/svelte/issues/2870*/
+    :global(.add-achievement-button) {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+
+    }
+</style>
 
