@@ -4,10 +4,10 @@
 
   $: modalStyles = `display: ${isOpen ? 'block' : 'none'}`;
 
-  let modalContent;
+  let modalOutside;
 
   function onClickOutside(e) {
-    if (e.target === modalContent) {
+    if (e.target !== modalOutside) {
       return false;
     }
 
@@ -15,9 +15,9 @@
   }
 </script>
 
-<div class="modal" style={modalStyles} on:click={onClickOutside}>
+<div class="modal" style={modalStyles} on:click={onClickOutside} bind:this={modalOutside}>
 
-  <div class="modal__content" bind:this={modalContent}>
+  <div class="modal__content">
     <span class="modal__close" on:click={onClose}>&times;</span>
     <slot></slot>
   </div>
@@ -39,7 +39,8 @@
   }
 
   .modal__content {
-    background-color: #fefefe;
+    position: relative;
+    background-color: aliceblue;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
