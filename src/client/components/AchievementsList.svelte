@@ -1,6 +1,7 @@
 <script>
     import Modal from './Modal.svelte';
     import AchievementDetails from './AchievementDetails.svelte';
+    import Unlock from './icons/Unlock.svelte';
 
     export let list = [];
     let currentAchievement = {};
@@ -9,11 +10,14 @@
 
     const DEFAULT_LOGO = "logo-placeholder.png";
 
-    function formatDate(dateTest) {
-        const date = new Date(dateTest);
+    function formatDate(dateString) {
+        if (!dateString) {
+            return "-";
+        }
+        const date = new Date(dateString);
 
         if (date.toString() === "Invalid Date") {
-          return "";
+          return "-";
         }
 
         return date.toLocaleString("ru", {
@@ -39,6 +43,7 @@
         if (currentAchievementIndex === 0) {
             return false;
         }
+        // TODO: show only unlocked
         currentAchievementIndex -= 1;
         currentAchievement = list[currentAchievementIndex]
     }
@@ -47,19 +52,32 @@
         if (currentAchievementIndex === list.length - 1) {
             return false;
         }
+        // TODO: show only unlocked
         currentAchievementIndex += 1;
         currentAchievement = list[currentAchievementIndex]
+    }
+
+    function onClickAchievement(achievement, index) {
+        if (!achievement.unlocked) {
+            return false;
+        }
+        isOpen = true;
+        currentAchievementIndex = index;
+        currentAchievement = achievement
     }
 </script>
 
 <ul class="achievement-list">
     {#each list as achievement, index}
-        <li class={getItemClasses(achievement)} on:click={() => {isOpen = true; currentAchievementIndex = index; currentAchievement = achievement}}>
+        <li class={getItemClasses(achievement)} on:click={() => onClickAchievement(achievement, index)}>
             <img class="achievement__logo" src={achievement.logo || DEFAULT_LOGO} alt={`${achievement.title} иконка`}>
             <div>
                 <div class="achievement__title">{achievement.title}</div>
                 <div class="achievement__date">{formatDate(achievement.date)}</div>
             </div>
+            {#if !achievement.unlocked}
+                <button class="achievement__unlock"><Unlock width="20px" height="20px"/></button>
+            {/if}
         </li>
     {/each}
 </ul>
@@ -99,11 +117,13 @@
         background-color: white;
         border-radius: 5px;
         cursor: pointer;
+        position: relative;
     }
 
     .achievement-list__item--locked {
         background-color: #cccccc;
         color: #666666;
+        cursor: auto;
     }
 
     .achievement-list__item--bronze {
@@ -132,6 +152,23 @@
     .achievement__date {
         font-size: 0.9rem;
         color: grey;
+    }
+
+    .achievement__unlock {
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: block;
+        padding: 0;
+        cursor: pointer;
+        background: transparent;
+        opacity: 0.6;
+    }
+
+    .achievement__unlock:hover {
+        opacity: 1;
     }
 
     .achievement-details {

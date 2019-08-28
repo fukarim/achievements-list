@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const Router = require('koa-router');
+const uuidv4 = require('uuid/v4');
 
 const JsonFileStorage = require('../database/JsonFileStorage');
 const convertToId = require('../utils/convertToId');
@@ -60,13 +61,14 @@ router.post("/achievements", async (ctx) => {
     }
 
     const newAchievement = {
+      uid: uuidv4(),
       id: generatedId,
       title,
       description: desc || "",
       logo: logoName ? `${imagesSubFolder}/${logoName}` : logoName,
       photos: photosNames,
-      date: date ? new Date(date) : new Date(),
-      unlocked: false,
+      date: date ? new Date(date) : null,
+      unlocked: !!date,
       type: Number(type)
     };
 
