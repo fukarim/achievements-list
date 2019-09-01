@@ -65,6 +65,26 @@
         currentAchievementIndex = index;
         currentAchievement = achievement
     }
+
+    function onClickUnlock(achievementUid) {
+        // TODO: extract fetch
+        fetch(`/achievements/${achievementUid}`, {
+            method: "put",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                data: {
+                    unlocked: true
+                }
+            })
+        }).then(() => {
+            // TODO: do it in more proper way
+            location.reload()
+        });
+    }
 </script>
 
 <ul class="achievement-list">
@@ -76,7 +96,7 @@
                 <div class="achievement__date">{formatDate(achievement.date)}</div>
             </div>
             {#if !achievement.unlocked}
-                <button class="achievement__unlock"><Unlock width="20px" height="20px"/></button>
+                <button class="achievement__unlock" on:click={() => onClickUnlock(achievement.uid)}><Unlock width="20px" height="20px"/></button>
             {/if}
         </li>
     {/each}

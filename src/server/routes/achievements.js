@@ -72,7 +72,7 @@ router.post("/achievements", async (ctx) => {
       type: Number(type)
     };
 
-    await dataStorage.crete(newAchievement);
+    await dataStorage.create(newAchievement);
 
     ctx.status = 200;
   } catch (err) {
@@ -81,6 +81,23 @@ router.post("/achievements", async (ctx) => {
     ctx.body = {error: "400 Bad Request"}
   }
 
+});
+
+router.put("/achievements/:id", async (ctx) => {
+  try {
+    const {id} = ctx.params;
+    // TODO: check data shape
+    const {data} = ctx.request.body;
+
+    await dataStorage.update(id, data);
+
+    console.log(id);
+    ctx.status = 200;
+  } catch (err) {
+    console.log(err);
+    ctx.status = 400;
+    ctx.body = {error: "400 Bad Request"}
+  }
 });
 
 module.exports = router;
