@@ -1,7 +1,7 @@
 <script>
 
   export let achievement = {};
-  $: currentImage = achievement.logo || "#";
+  $: currentImage = achievement.logo || achievement.photos && achievement.photos[0]  || "#";
 
   function onSmallImageClick(e) {
     if (e.target.src) {

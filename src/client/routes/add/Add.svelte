@@ -21,14 +21,12 @@
   }
 
   function onPhotosChange(event) {
-    photoImages = [];
-
     if (event.target.files && event.target.files[0]) {
       Array.from(event.target.files).map(file => {
         const reader = new FileReader();
 
         reader.onload = function(e) {
-          photoImages = [...photoImages, e.target.result]
+          photoImages = [...photoImages, {url: e.target.result, file}]
         };
 
         reader.readAsDataURL(file);
@@ -39,6 +37,14 @@
   function onSubmit(event) {
 
     const formData = new FormData(form);
+    formData.delete('photos');
+    photoImages.map(img => {
+      formData.append('photos',  img.file)
+    });
+
+    if (!logoImage) {
+      formData.delete('logo');
+    }
 
     fetch("/achievements", {
       method: "post",
@@ -49,6 +55,14 @@
             .catch(err => console.log(err));
 
     event.preventDefault();
+  }
+
+  function onPhotoRemove(photoImage) {
+    photoImages = photoImages.filter(img => img.url !== photoImage.url)
+  }
+
+  function onLogoRemove() {
+    logoImage = null
   }
 
 </script>
@@ -66,6 +80,38 @@
     padding: 10px;
     box-shadow: 0 0 1px 0 black;
   }
+
+  .add-achievement--image-container {
+    display: inline-block;
+    margin: 10px;
+    position: relative;
+  }
+
+  .add-achievement--image {
+    height: 5vw;
+    width: 5vw;
+    min-width: 100px;
+    min-height: 100px;
+    object-fit: cover;
+  }
+
+  .add-achievement--remove-image {
+    color: darkred;
+    font-size: 20px;
+    padding: 0;
+    line-height: 20px;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .add-achievement--remove-image:hover,
+  .add-achievement--remove-image:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+  }
 </style>
 
 <main class="add-achievement">
@@ -80,14 +126,21 @@
     <label>
       ID: <input type="text" name="id">
     </label>
+    {#if logoImage}
+    <div class="add-achievement--image-container">
+      <img src={logoImage} alt="logo-image" class="add-achievement--image" />
+      <span class="add-achievement--remove-image" on:click={onLogoRemove}>&times;</span>
+    </div>
+    {/if}
     <label>
-      {#if logoImage}
-        <img src={logoImage} alt="logo-image" />
-      {/if} Logo: <input type="file" name="logo" on:change={onLogoChange}/>
+      Logo: <input type="file" name="logo" on:change={onLogoChange}/>
     </label>
 
     {#each photoImages as photoImage, i}
-      <img src={photoImage} alt={`photo-image-${i}`} />
+      <div class="add-achievement--image-container">
+        <img src={photoImage.url} alt={`photo-image-${i}`} class="add-achievement--image"/>
+        <span class="add-achievement--remove-image" on:click={() => onPhotoRemove(photoImage)}>&times;</span>
+      </div>
     {/each}
     <label>
       Photos: <input type="file" name="photos" multiple on:change={onPhotosChange}/>

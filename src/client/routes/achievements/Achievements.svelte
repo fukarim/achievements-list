@@ -22,10 +22,9 @@
 <style>
     /* hack need for passing styles  https://github.com/sveltejs/svelte/issues/2870*/
     :global(.add-achievement-button) {
-        position: absolute;
+        position: fixed;
         right: 20px;
         top: 20px;
-
     }
 </style>
 

@@ -40,7 +40,8 @@ router.get("/achievements", async (ctx) => {
 router.post("/achievements", async (ctx) => {
   try {
     const {title, desc, id, date, type} = ctx.request.body;
-    const generatedId = id || convertToId(title);
+    const uid = uuidv4();
+    const generatedId = id || convertToId(title) || uid;
 
     const {logo, photos} = ctx.request.files;
 
@@ -54,14 +55,14 @@ router.post("/achievements", async (ctx) => {
       })
       : [];
 
-    const logoName = logo.size > 0 ? `${generatedId}-logo${path.extname(logo.name)}` : "";
+    const logoName = logo && logo.size > 0 ? `${generatedId}-logo${path.extname(logo.name)}` : "";
 
     if (logoName) {
       saveImage(logo, path.join(`${imagesFolderPath}/${imagesSubFolder}`, logoName));
     }
 
     const newAchievement = {
-      uid: uuidv4(),
+      uid,
       id: generatedId,
       title,
       description: desc || "",
