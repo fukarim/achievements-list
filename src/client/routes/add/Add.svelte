@@ -1,5 +1,6 @@
 <script>
   import { navigate } from "svelte-routing";
+  import Button from "../../components/Button.svelte"
 
   let form, logoImage;
   let photoImages = [];
@@ -71,6 +72,8 @@
   .add-achievement {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .add-achievement__form {
@@ -159,4 +162,6 @@
 
     <button type="submit" on:submit={onSubmit}>Отправить</button>
   </form>
+
+  <Button href="/" className="add-achievement__back-btn">Back</Button>
 </main>
