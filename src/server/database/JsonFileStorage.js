@@ -8,10 +8,16 @@ class JsonFileStorage extends Storage {
     this.filename = filename
   }
 
-  async get(options) {
+  async get(options= {}) {
     const data = await fsPromise.readFile(this.filename);
 
-    return JSON.parse(data.toString());
+    const list = JSON.parse(data.toString());
+
+    if (options.id) {
+      return list.find(el => el.uid === options.id);
+    }
+
+    return list;
   }
 
   async create(newData) {
@@ -42,6 +48,19 @@ class JsonFileStorage extends Storage {
     ];
 
     await fsPromise.writeFile(this.filename, JSON.stringify(newList, null, 2));
+
+    return true
+  }
+
+  async delete(uid) {
+    // TODO: think how to do it in more clear way
+    // Soft deleting ??
+    const list = await this.get();
+    const elemIndex = list.findIndex(el => el.uid === uid);
+
+    list.splice(elemIndex, 1);
+
+    await fsPromise.writeFile(this.filename, JSON.stringify(list, null, 2));
 
     return true
   }

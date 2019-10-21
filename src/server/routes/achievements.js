@@ -101,4 +101,20 @@ router.put("/achievements/:id", async (ctx) => {
   }
 });
 
+router.del("/achievements/:id", async (ctx) => {
+  try {
+    const {id} = ctx.params;
+
+    // TODO: remove images before removing achievemnt
+    // const currentAchievement = dataStorage.get({id});
+    await dataStorage.delete(id);
+
+    ctx.status = 204;
+  } catch (err) {
+    console.log(err);
+    ctx.status = 400;
+    ctx.body = {error: "400 Bad Request"}
+  }
+});
+
 module.exports = router;

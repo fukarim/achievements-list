@@ -2,6 +2,7 @@
     import Modal from './Modal.svelte';
     import AchievementDetails from './AchievementDetails.svelte';
     import Unlock from './icons/Unlock.svelte';
+    import Button from './Button.svelte';
 
     export let list = [];
     let currentAchievement = {};
@@ -85,6 +86,20 @@
             location.reload()
         });
     }
+
+    function onClickDelete() {
+        fetch(`/achievements/${currentAchievement.uid}`, {
+            method: "delete",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+        }).then(() => {
+            // TODO: do it in more proper way
+            location.reload()
+        });
+    }
 </script>
 
 <ul class="achievement-list">
@@ -104,6 +119,10 @@
 
 <!-- TODO: create a component for modal content ?-->
 <Modal isOpen={isOpen} onClose={() => isOpen = false}>
+
+<Button>Edit</Button>
+<!--TODO Add danger styles to button-->
+<Button onClick={onClickDelete}>Remove</Button>
 
 <!--TODO: wrap to button
     create a component
