@@ -15,13 +15,13 @@ router.get("*", async (ctx) => {
         <meta charset='utf8'>
         <meta name='viewport' content='width=device-width'>
     
-        <link rel='stylesheet' href='global.css'>
-        <link rel='stylesheet' href='bundle.css'>
+        <link rel='stylesheet' href='/global.css'>
+        <link rel='stylesheet' href='/bundle.css'>
     </head>
     
     <body>
     <div id="app">${html}</div>
-    <script src='bundle.js'></script>
+    <script src='/bundle.js'></script>
     </body>
     </html>
   `;

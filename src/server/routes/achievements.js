@@ -25,6 +25,18 @@ function getImagesSubFolder(id) {
   return id
 }
 
+router.get("/achievements/:id", async (ctx) => {
+  try {
+    const {id} = ctx.params;
+    const achievement = await dataStorage.get({id});
+    ctx.status = 200;
+    ctx.body = achievement;
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {error: "400 Bad Request"}
+  }
+});
+
 router.get("/achievements", async (ctx) => {
   try {
     const list = await dataStorage.get();
@@ -34,7 +46,6 @@ router.get("/achievements", async (ctx) => {
     ctx.status = 400;
     ctx.body = {error: "400 Bad Request"}
   }
-
 });
 
 router.post("/achievements", async (ctx) => {

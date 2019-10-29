@@ -1,4 +1,6 @@
 <script>
+    import { navigate } from "svelte-routing";
+
     import Modal from './Modal.svelte';
     import AchievementDetails from './AchievementDetails.svelte';
     import Unlock from './icons/Unlock.svelte';
@@ -100,6 +102,10 @@
             location.reload()
         });
     }
+
+    function onClickEdit() {
+        navigate(`/edit/${currentAchievement.uid}`)
+    }
 </script>
 
 <ul class="achievement-list">
@@ -119,27 +125,25 @@
 
 <!-- TODO: create a component for modal content ?-->
 <Modal isOpen={isOpen} onClose={() => isOpen = false}>
+    <Button onClick={onClickEdit}>Edit</Button>
+    <!--TODO Add danger styles to button-->
+    <Button onClick={onClickDelete}>Remove</Button>
 
-<Button>Edit</Button>
-<!--TODO Add danger styles to button-->
-<Button onClick={onClickDelete}>Remove</Button>
+    <!--TODO: wrap to button
+        create a component
+        add hover area around an arrow
+        add keyboard arrow handlers
+        add disabled state-->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="achievement__prev" on:click={onClickPrev}>
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
+    </svg>
 
-<!--TODO: wrap to button
-    create a component
-    add hover area around an arrow
-    add keyboard arrow handlers
-    add disabled state-->
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="achievement__prev" on:click={onClickPrev}>
-    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
-</svg>
+    <AchievementDetails achievement={currentAchievement} />
 
-<AchievementDetails achievement={currentAchievement} />
-
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="achievement__next"
-     on:click={onClickNext}>
-    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
-</svg>
-
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="achievement__next"
+         on:click={onClickNext}>
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
+    </svg>
 </Modal>
 
 <style>

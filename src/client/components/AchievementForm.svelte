@@ -9,9 +9,37 @@
   export let id = '';
   export let date;
   export let type;
-  export let onSubmit = () => {
-  };
-  // export let date = new Date('Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)').toISOString().substring(0, 10);
+  export let onSubmit = () => {};
+
+  onMount(async () => {
+    if (logo) {
+      logoImage = await fetchPhoto(logo)
+      console.log()
+    }
+
+    // TODO
+    // if (photos && photos.length) {
+    //   photoImages = photos.map(async (photo) => await fetchPhoto(photo))
+    //   console.log()
+    // }
+  });
+
+  async function fetchPhoto(photo) {
+    const response = await fetch(photo);
+    const blob = await response.blob();
+
+    const reader = new FileReader();
+
+    const promise = new Promise(resolve => {
+      reader.onload = function (e) {
+        resolve({url: e.target.result, file: blob})
+      };
+    });
+
+    reader.readAsDataURL(blob);
+
+    return promise
+  }
 
   let logoImage;
   let photoImages = [];
@@ -25,7 +53,7 @@
       const reader = new FileReader();
 
       reader.onload = function (e) {
-        logoImage = e.target.result
+        logoImage = {url: e.target.result, file: event.target.files[0]}
       };
 
       reader.readAsDataURL(event.target.files[0]);
@@ -48,7 +76,6 @@
 
   function onFormSubmit() {
     const formData = new FormData();
-    formData.delete('photos');
     photoImages.map(img => {
       formData.append('photos', img.file)
     });
@@ -62,8 +89,8 @@
       formData.append('date', date);
     }
 
-    if (!logoImage) {
-      formData.delete('logo');
+    if (logoImage) {
+      formData.append('logo', logoImage.file)
     }
 
     onSubmit(formData);
@@ -91,7 +118,7 @@
   </label>
   {#if logoImage}
     <div class="achievement-form--image-container">
-      <img src={logoImage} alt="logo-image" class="achievement-form--image"/>
+      <img src={logoImage.url} alt="logo-image" class="achievement-form--image"/>
       <span class="achievement-form--remove-image" on:click={onLogoRemove}>&times;</span>
     </div>
   {/if}
