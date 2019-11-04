@@ -79,9 +79,8 @@
             },
             credentials: 'same-origin',
             body: JSON.stringify({
-                data: {
-                    unlocked: true
-                }
+                unlocked: true,
+                date: new Date()
             })
         }).then(() => {
             // TODO: do it in more proper way

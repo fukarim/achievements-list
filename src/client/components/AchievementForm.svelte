@@ -13,19 +13,17 @@
 
   onMount(async () => {
     if (logo) {
-      logoImage = await fetchPhoto(logo)
-      console.log()
+      logoImage = await fetchPhoto(logo);
     }
 
-    // TODO
-    // if (photos && photos.length) {
-    //   photoImages = photos.map(async (photo) => await fetchPhoto(photo))
-    //   console.log()
-    // }
+    if (photos && photos.length) {
+      photoImages = await Promise.all(photos.map((photo) => fetchPhoto(photo)));
+    }
   });
 
   async function fetchPhoto(photo) {
-    const response = await fetch(photo);
+    const absolutePath = photo.startsWith("/") ? photo : `/${photo}`;
+    const response = await fetch(absolutePath);
     const blob = await response.blob();
 
     const reader = new FileReader();
@@ -81,7 +79,7 @@
     });
 
     formData.append('title', title);
-    formData.append('desc', desc);
+    formData.append('description', desc);
     formData.append('id', id);
     formData.append('type', type);
 
@@ -96,6 +94,7 @@
     onSubmit(formData);
   }
 
+  // TODO: test it. when remove one photos from two remove all
   function onPhotoRemove(photoImage) {
     photoImages = photoImages.filter(img => img.url !== photoImage.url)
   }

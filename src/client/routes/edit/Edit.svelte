@@ -15,25 +15,21 @@
       date: new Date(date).toISOString().substring(0, 10),
       desc: description,
       title,
-      type: type.toString(),
+      type,
       logo,
       photos
     };
   }
 
-  function onSubmit() {
-
+  function onSubmit(formData) {
+      fetch(`/achievements/${id}`, {
+        method: "put",
+        credentials: 'same-origin',
+        body: formData
+      })
+              .then(() => navigate("/"))
+              .catch(err => console.log(err));
   }
-
-  // function onSubmit(formData) {
-  //   fetch("/achievements", {
-  //     method: "post",
-  //     credentials: 'same-origin',
-  //     body: formData
-  //   })
-  //           .then(() => navigate("/"))
-  //           .catch(err => console.log(err));
-  // }
 </script>
 
 {#await promise}

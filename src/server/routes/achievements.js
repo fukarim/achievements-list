@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 const Router = require('koa-router');
 const uuidv4 = require('uuid/v4');
@@ -16,6 +16,17 @@ const listFileName = process.env.NODE_ENV === 'production'
 const imagesFolderPath = `${process.cwd()}/static/imgs`;
 
 const dataStorage = new JsonFileStorage(`${process.cwd()}/data/${listFileName}`);
+
+function getEmptyImagesSubFolder(id) {
+  if (fs.existsSync(`${imagesFolderPath}/${id}`)) {
+    // TODO: do it more properly
+    // fs.emptyDirSync(`${imagesFolderPath}/${id}`, {recursive: true})
+  } else {
+    fs.mkdirSync(`${imagesFolderPath}/${id}`);
+  }
+
+  return id
+}
 
 function getImagesSubFolder(id) {
   if (!fs.existsSync(`${imagesFolderPath}/${id}`)) {
@@ -50,14 +61,14 @@ router.get("/achievements", async (ctx) => {
 
 router.post("/achievements", async (ctx) => {
   try {
-    const {title, desc, id, date, type} = ctx.request.body;
+    const {title, description = "", id, date = null, type} = ctx.request.body;
     const uid = uuidv4();
+    // TODO: make id more simple or remove at all
     const generatedId = id || convertToId(title) || uid;
 
     const {logo, photos} = ctx.request.files;
 
-    const imagesSubFolder = Array.isArray(photos) ? getImagesSubFolder(generatedId) : "";
-
+    const imagesSubFolder = getImagesSubFolder(uid);
     const photosNames = Array.isArray(photos)
       ? photos.map((photo, index) => {
         const photoName = `${generatedId}-image${index + 1}${path.extname(photo.name)}`;
@@ -76,12 +87,12 @@ router.post("/achievements", async (ctx) => {
       uid,
       id: generatedId,
       title,
-      description: desc || "",
+      description,
       logo: logoName ? `${imagesSubFolder}/${logoName}` : logoName,
       photos: photosNames,
-      date: date ? new Date(date) : null,
+      date,
       unlocked: !!date,
-      type: Number(type)
+      type
     };
 
     await dataStorage.create(newAchievement);
@@ -99,11 +110,39 @@ router.put("/achievements/:id", async (ctx) => {
   try {
     const {id} = ctx.params;
     // TODO: check data shape
-    const {data} = ctx.request.body;
+    const data = ctx.request.body;
 
-    await dataStorage.update(id, data);
+    const fileData = {};
 
-    console.log(id);
+    if (ctx.request.files) {
+      const {logo, photos} = ctx.request.files;
+
+      // TODO: more generic
+      const imagesSubFolder = getEmptyImagesSubFolder(id);
+      // TODO: this code donot remove redundant photos
+      const photosNames = Array.isArray(photos)
+        ? photos.map((photo, index) => {
+          const photoName = `${id}-image${index + 1}${path.extname(photo.name)}`;
+          saveImage(photo, path.join(`${imagesFolderPath}/${imagesSubFolder}`, photoName));
+          return `${imagesSubFolder}/${photoName}`
+        })
+        : [];
+
+      const logoName = logo && logo.size > 0 ? `${id}-logo${path.extname(logo.name)}` : "";
+
+      if (logoName) {
+        saveImage(logo, path.join(`${imagesFolderPath}/${imagesSubFolder}`, logoName));
+      }
+
+      fileData.logo = logoName ? `${imagesSubFolder}/${logoName}` : '';
+      fileData.photos = photosNames;
+    }
+
+    await dataStorage.update(id, {
+      ...data,
+      ...fileData
+    });
+
     ctx.status = 200;
   } catch (err) {
     console.log(err);
