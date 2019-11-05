@@ -94,7 +94,6 @@
     onSubmit(formData);
   }
 
-  // TODO: test it. when remove one photos from two remove all
   function onPhotoRemove(photoImage) {
     photoImages = photoImages.filter(img => img.url !== photoImage.url)
   }
@@ -148,7 +147,7 @@
     </select>
   </label>
 
-  <Button onClick={onFormSubmit}>Отправить</Button>
+  <Button type="submit">Отправить</Button>
 </form>
 
 <style>

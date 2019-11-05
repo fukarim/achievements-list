@@ -12,7 +12,7 @@
   <a
           href={href}
           class={`${className} material-button`}
-          {...excludeProps($$props, ["className", "onClick", "href"])}
+          {...excludeProps($$props, ["className", "onClick", "href", "type"])}
   >
     <slot></slot>
   </a>

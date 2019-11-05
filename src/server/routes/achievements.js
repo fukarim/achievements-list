@@ -69,13 +69,14 @@ router.post("/achievements", async (ctx) => {
     const {logo, photos} = ctx.request.files;
 
     const imagesSubFolder = getImagesSubFolder(uid);
-    const photosNames = Array.isArray(photos)
-      ? photos.map((photo, index) => {
+    const actualPhotos = photos
+      ? Array.isArray(photos) ? photos : [photos]
+      : [];
+    const photosNames = actualPhotos.map((photo, index) => {
         const photoName = `${generatedId}-image${index + 1}${path.extname(photo.name)}`;
         saveImage(photo, path.join(`${imagesFolderPath}/${imagesSubFolder}`, photoName));
         return `${imagesSubFolder}/${photoName}`
-      })
-      : [];
+      });
 
     const logoName = logo && logo.size > 0 ? `${generatedId}-logo${path.extname(logo.name)}` : "";
 
@@ -119,14 +120,17 @@ router.put("/achievements/:id", async (ctx) => {
 
       // TODO: more generic
       const imagesSubFolder = getEmptyImagesSubFolder(id);
-      // TODO: this code donot remove redundant photos
-      const photosNames = Array.isArray(photos)
-        ? photos.map((photo, index) => {
+
+      const actualPhotos = photos
+        ? Array.isArray(photos) ? photos : [photos]
+        : [];
+
+      // TODO: this code do not remove redundant photos
+      const photosNames = actualPhotos.map((photo, index) => {
           const photoName = `${id}-image${index + 1}${path.extname(photo.name)}`;
           saveImage(photo, path.join(`${imagesFolderPath}/${imagesSubFolder}`, photoName));
           return `${imagesSubFolder}/${photoName}`
-        })
-        : [];
+        });
 
       const logoName = logo && logo.size > 0 ? `${id}-logo${path.extname(logo.name)}` : "";
 
