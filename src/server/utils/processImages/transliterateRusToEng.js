@@ -1,5 +1,4 @@
 module.exports = function convertToId (str) {
-
   const ruToEnd = {
     'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
     'е': 'e', 'ё': 'e', 'ж': 'j', 'з': 'z', 'и': 'i',
@@ -11,7 +10,10 @@ module.exports = function convertToId (str) {
 
   const translitedArr = [];
 
-  str = str.replace(" ", "-").replace(/[^\wа-яёА-ЯЁ]+/g, '').replace(/[ъь]+/g, '').replace(/й/g, 'i');
+  str = str.replace(" ", "-")
+    .replace(/[^\wа-яёА-ЯЁ]+/g, '')
+    .replace(/[ъь]+/g, '')
+    .replace(/й/g, 'i');
 
   for ( let i = 0; i < str.length; ++i ) {
     translitedArr.push(

@@ -1,7 +1,6 @@
 [
   {
-    "uid": "c4119f05-effd-48e5-978c-1e9fb01d09bb",
-    "id": "mmb",
+    "id": "c4119f05-effd-48e5-978c-1e9fb01d09bb",
     "title": "Московский марш бросок (ММБ)",
     "description": "",
     "logo": "logo-placeholder.png",
@@ -11,8 +10,7 @@
     "type": 2
   },
   {
-    "uid": "1a95ad6e-0e58-4e0e-9ac5-3a7efdfa4665",
-    "id": "Гонка героев",
+    "id": "1a95ad6e-0e58-4e0e-9ac5-3a7efdfa4665",
     "title": "Гонка героев",
     "description": "",
     "logo": "logo-placeholder.png",
@@ -22,8 +20,7 @@
     "type": 1
   },
   {
-    "uid": "ef2f0926-4ac0-419b-8525-9569e3e3c81a",
-    "id": "Диплом бакалавриата",
+    "id": "ef2f0926-4ac0-419b-8525-9569e3e3c81a",
     "title": "Диплом бакалавриата",
     "description": "",
     "logo": "logo-placeholder.png",
@@ -33,8 +30,7 @@
     "type": 3
   },
   {
-    "uid": "765b7cee-2ee9-4119-bf62-70af0c91393c",
-    "id": "",
+    "id": "765b7cee-2ee9-4119-bf62-70af0c91393c",
     "title": "Диплом магистратуры",
     "description": "",
     "logo": "logo-placeholder.png",
@@ -46,8 +42,7 @@
     "type": 3
   },
   {
-    "uid": "3f231059-5e30-4f39-bf6b-678de9025a47",
-    "id": "",
+    "id": "3f231059-5e30-4f39-bf6b-678de9025a47",
     "title": "Водительские права",
     "description": "",
     "logo": "logo-placeholder.png",

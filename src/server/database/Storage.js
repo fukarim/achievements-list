@@ -1,5 +1,5 @@
 class Storage {
-  get() {
+  read() {
     throw new Error("Method get not implemented")
   }
   create() {

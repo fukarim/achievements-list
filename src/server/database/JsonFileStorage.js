@@ -1,5 +1,7 @@
 const fsPromise = require('fs').promises;
 
+const uuidv4 = require('uuid/v4');
+
 const Storage = require('./Storage');
 
 class JsonFileStorage extends Storage {
@@ -8,61 +10,66 @@ class JsonFileStorage extends Storage {
     this.filename = filename
   }
 
-  async get(options= {}) {
-    const data = await fsPromise.readFile(this.filename);
-
-    const list = JSON.parse(data.toString());
-
-    if (options.id) {
-      return list.find(el => el.uid === options.id);
+  async read({id}) {
+    const data = await this._getData();
+    if (id) {
+      return data.find(el => el.id === id);
     }
-
-    return list;
+    return data;
   }
 
   async create(newData) {
-    const list = await this.get();
-    const newList = [...list, newData];
+    if ('id' in newData) {
+      throw new Error('JsonFileStorage: Property id cannot be passed to new recording. It used internally.')
+    }
 
-    await fsPromise.writeFile(this.filename, JSON.stringify(newList, null, 2))
+    const data = await this._getData();
 
-    return true
+    const id = uuidv4();
+    await this._saveData([...data, {...newData, id}]);
+
+    return id
   }
 
-  async update(uid, dataToUpdate) {
-    const list = await this.get();
-    const elemIndex = list.findIndex(el => el.uid === uid);
+  async update(id, dataToUpdate) {
+    const list = await this._getData();
+    const elemIndex = list.findIndex(el => el.id === id);
 
     if (elemIndex === -1) {
-      throw new Error(`Element with uid ${uid} doesn't found`)
+      throw new Error(`Element with id ${id} doesn't found`)
     }
 
     const updatedElem = {
       ...list[elemIndex],
       ...dataToUpdate
     };
-    const newList = [
-      ...list.slice(0, elemIndex),
-      updatedElem,
-      ...list.slice(elemIndex + 1)
-    ];
 
-    await fsPromise.writeFile(this.filename, JSON.stringify(newList, null, 2));
-
-    return true
+    return this._saveData([...list.slice(0, elemIndex), updatedElem, ...list.slice(elemIndex + 1)])
   }
 
-  async delete(uid) {
-    // TODO: think how to do it in more clear way
-    // Soft deleting ??
-    const list = await this.get();
-    const elemIndex = list.findIndex(el => el.uid === uid);
+  async delete(id) {
+    // TODO: change to soft deleting
+    const list = await this._getData();
+    return this._saveData(list.filter(item => item.id !== id))
+  }
 
-    list.splice(elemIndex, 1);
+  async _getData() {
+    if (this.data) {
+      return this.data
+    }
+    const data = await fsPromise.readFile(this.filename);
+    this.data = JSON.parse(data.toString());
+    return this.data;
+  }
 
-    await fsPromise.writeFile(this.filename, JSON.stringify(list, null, 2));
-
-    return true
+  async _saveData(newData) {
+    try {
+      await fsPromise.writeFile(this.filename, JSON.stringify(newData, null, 2));
+      this.data = newData;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 

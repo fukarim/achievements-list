@@ -3,7 +3,7 @@ const Koa = require('koa');
 const app = new Koa();
 
 require("./middlewares")(app);
-require("./routes")(app);
+require("./controllers")(app);
 
 const port = process.env.PORT || 8080;
 

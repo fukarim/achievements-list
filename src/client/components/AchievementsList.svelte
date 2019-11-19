@@ -89,7 +89,7 @@
     }
 
     function onClickDelete() {
-        fetch(`/achievements/${currentAchievement.uid}`, {
+        fetch(`/achievements/${currentAchievement.id}`, {
             method: "delete",
             headers: {
                 'Accept': 'application/json',
@@ -103,7 +103,7 @@
     }
 
     function onClickEdit() {
-        navigate(`/edit/${currentAchievement.uid}`)
+        navigate(`/edit/${currentAchievement.id}`)
     }
 </script>
 
@@ -116,7 +116,7 @@
                 <div class="achievement__date">{formatDate(achievement.date)}</div>
             </div>
             {#if !achievement.unlocked}
-                <button class="achievement__unlock" on:click={() => onClickUnlock(achievement.uid)}><Unlock width="20px" height="20px"/></button>
+                <button class="achievement__unlock" on:click={() => onClickUnlock(achievement.id)}><Unlock width="20px" height="20px"/></button>
             {/if}
         </li>
     {/each}
