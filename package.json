@@ -1,6 +1,6 @@
 {
   "name": "achievements-list",
-  "description": "Achievements list",
+  "description": "Simple svelte project that allow to manage personal achievements.",
   "version": "0.0.1",
   "scripts": {
     "start-server:development": "cross-env NODE_ENV=development NODE_ICU_DATA=node_modules/full-icu nodemon ./src/server/server.js --watch src/server --watch public/App.js",
@@ -28,7 +28,5 @@
     "terser": "^4.0.2",
     "uuid": "^3.3.3"
   },
-  "dependencies": {
-    "fs-extra": "^8.1.0"
-  }
+  "dependencies": {}
 }
