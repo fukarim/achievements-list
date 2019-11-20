@@ -24,8 +24,8 @@ class JsonFileStorage extends Storage {
     }
 
     const data = await this._getData();
-
     const id = uuidv4();
+
     await this._saveData([...data, {...newData, id}]);
 
     return id

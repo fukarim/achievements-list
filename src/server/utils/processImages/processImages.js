@@ -18,7 +18,7 @@ async function getOrCreateImagesSubFolder(name, isTemp) {
 }
 
 async function processImages({id, title, logo, photos, updating}) {
-  if (!logo && !photos || photos.length === 0) {
+  if (!logo && (!photos || photos.length === 0)) {
     return {}
   }
 
@@ -32,7 +32,7 @@ async function processImages({id, title, logo, photos, updating}) {
     await saveImage(logo, path.resolve(imagesSubFolderPath, logoFilePath));
   }
 
-  let photosFilePaths;
+  let photosFilePaths = [];
   if (photos) {
     photosFilePaths = await Promise.all(photos.map(async (photo, index) => {
       const photoFilePath = `${imagesPrefix}-image${index + 1}.${getExtensionFormMimeType(photo.type)}`;
@@ -48,8 +48,8 @@ async function processImages({id, title, logo, photos, updating}) {
   }
 
   return {
-    ...logoFilePath ? {logoFilePath: path.join(id, logoFilePath)} : {},
-    ...photosFilePaths ? {photosFilePaths: photosFilePaths.map(imgPath => path.join(id, imgPath))} : {}
+    logoFilePath: logoFilePath ? path.join(id, logoFilePath) : '',
+    photosFilePaths: photosFilePaths.map(imgPath => path.join(id, imgPath))
   }
 }
 

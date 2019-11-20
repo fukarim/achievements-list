@@ -8,7 +8,7 @@ function saveImage(image, path) {
     reader.on('end', () => {
       resolve()
     });
-    reader.on('error', (e) => {
+    reader.on('error', e => {
       reject(e)
     });
   })

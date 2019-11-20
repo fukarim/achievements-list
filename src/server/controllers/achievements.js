@@ -13,7 +13,7 @@ router.get("/", async (ctx) => {
     ctx.body = list;
   } catch (err) {
     ctx.status = 400;
-    ctx.body = {error: "List of achievements can't be got"}
+    ctx.body = {error: "400 Bad Request"}
   }
 });
 
@@ -53,7 +53,9 @@ router.put("/:id", async (ctx) => {
     if (ctx.request.files) {
       const {logo, photos} = ctx.request.files;
       fileData.logo = logo;
-      fileData.photos = photos;
+      if (photos) {
+        fileData.photos = Array.isArray(photos) ? photos : [photos];
+      }
     }
 
     await Achievement.update(id, {title, description, date, type, unlocked, ...fileData});
