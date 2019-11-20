@@ -16,12 +16,13 @@
     <title>Achievements list</title>
 </svelte:head>
 
-<Button href="add" className="add-achievement-button">Добавить достижение</Button>
+<div class="add-achievement-button-wrapper">
+    <Button href="add">Добавить достижение</Button>
+</div>
 <AchievementsList list={list} />
 
 <style>
-    /* hack need for passing styles  https://github.com/sveltejs/svelte/issues/2870*/
-    :global(.add-achievement-button) {
+    .add-achievement-button-wrapper {
         position: fixed;
         right: 20px;
         top: 20px;

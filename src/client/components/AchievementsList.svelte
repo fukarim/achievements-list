@@ -101,10 +101,6 @@
             location.reload()
         });
     }
-
-    function onClickEdit() {
-        navigate(`/edit/${currentAchievement.id}`)
-    }
 </script>
 
 <ul class="achievement-list">
@@ -124,9 +120,9 @@
 
 <!-- TODO: create a component for modal content ?-->
 <Modal isOpen={isOpen} onClose={() => isOpen = false}>
-    <Button onClick={onClickEdit}>Edit</Button>
+    <Button href={`/edit/${currentAchievement.id}`}>Edit</Button>
     <!--TODO Add danger styles to button-->
-    <Button onClick={onClickDelete}>Remove</Button>
+    <Button on:click={onClickDelete}>Remove</Button>
 
     <!--TODO: wrap to button
         create a component

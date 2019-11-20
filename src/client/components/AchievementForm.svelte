@@ -1,12 +1,13 @@
 <script>
   import {onMount} from 'svelte';
-  import Button from "../components/Button.svelte"
+
+  import Button from "./Button.svelte";
+  import loadFile from '../utils/loadFile';
 
   export let logo;
   export let photos;
   export let title = '';
   export let desc = '';
-  export let id = '';
   export let date;
   export let type;
   export let onSubmit = () => {};
@@ -17,7 +18,7 @@
     }
 
     if (photos && photos.length) {
-      photoImages = await Promise.all(photos.map((photo) => fetchPhoto(photo)));
+      photoImages = await Promise.all(photos.map(photo => fetchPhoto(photo)));
     }
   });
 
@@ -26,17 +27,7 @@
     const response = await fetch(absolutePath);
     const blob = await response.blob();
 
-    const reader = new FileReader();
-
-    const promise = new Promise(resolve => {
-      reader.onload = function (e) {
-        resolve({url: e.target.result, file: blob})
-      };
-    });
-
-    reader.readAsDataURL(blob);
-
-    return promise
+    return loadFile(blob)
   }
 
   let logoImage;
@@ -48,26 +39,14 @@
     }
 
     if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-
-      reader.onload = function (e) {
-        logoImage = {url: e.target.result, file: event.target.files[0]}
-      };
-
-      reader.readAsDataURL(event.target.files[0]);
+      loadFile(event.target.files[0]).then(img => logoImage = img);
     }
   }
 
   function onPhotosChange(event) {
     if (event.target.files && event.target.files[0]) {
       Array.from(event.target.files).map(file => {
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          photoImages = [...photoImages, {url: e.target.result, file}]
-        };
-
-        reader.readAsDataURL(file);
+        loadFile(file).then(newPhoto => photoImages = [...photoImages, newPhoto]);
       })
     }
   }
@@ -80,7 +59,6 @@
 
     formData.append('title', title);
     formData.append('description', desc);
-    formData.append('id', id);
     formData.append('type', type);
 
     if (date) {
@@ -111,13 +89,10 @@
     Описание:<br/>
     <textarea name="desc" bind:value={desc}></textarea>
   </label>
-  <label>
-    ID: <input type="text" name="id" bind:value={id}>
-  </label>
   {#if logoImage}
     <div class="achievement-form--image-container">
-      <img src={logoImage.url} alt="logo-image" class="achievement-form--image"/>
-      <span class="achievement-form--remove-image" on:click={onLogoRemove}>&times;</span>
+      <img src={logoImage.url} alt="Logo image" class="achievement-form--image"/>
+      <button class="achievement-form--remove-image" on:click={onLogoRemove}>&times;</button>
     </div>
   {/if}
   <label>
@@ -126,7 +101,7 @@
 
   {#each photoImages as photoImage, i}
     <div class="achievement-form--image-container">
-      <img src={photoImage.url} alt={`photo-image-${i}`} class="achievement-form--image"/>
+      <img src={photoImage.url} alt={`Photo image ${i}`} class="achievement-form--image"/>
       <span class="achievement-form--remove-image" on:click={() => onPhotoRemove(photoImage)}>&times;</span>
     </div>
   {/each}
@@ -152,11 +127,12 @@
 
 <style>
   .achievement-form {
-    min-width: 800px;
+    min-width: 400px;
     width: 50%;
     margin: 20px;
     padding: 10px;
     box-shadow: 0 0 1px 0 black;
+    background-color: white;
   }
 
   .achievement-form--image-container {
@@ -175,6 +151,8 @@
 
   .achievement-form--remove-image {
     color: darkred;
+    background-color: transparent;
+    border: 0;
     font-size: 20px;
     padding: 0;
     line-height: 20px;

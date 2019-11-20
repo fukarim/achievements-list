@@ -1,26 +1,25 @@
 <script>
-  import {Link} from "svelte-routing";
+  import {link} from "svelte-routing";
 
   import excludeProps from '../utils/excludeProps';
 
   export let href;
-  export let onClick = () => {};
-  export let className = "";
 </script>
 
 {#if href}
   <a
           href={href}
-          class={`${className} material-button`}
-          {...excludeProps($$props, ["className", "onClick", "href", "type"])}
+          use:link
+          class='material-button'
+          {...excludeProps($$props, ["href"])}
   >
     <slot></slot>
   </a>
 {:else}
   <button
-          class={`material-button ${className}`}
-          on:click={onClick}
-          {...excludeProps($$props, ["className", "onClick"])}
+          class='material-button'
+          on:click
+          {...$$props}
 >
     <slot> </slot>
   </button>
@@ -33,6 +32,7 @@
     border: none;
     border-radius: 4px;
     padding: 0 16px;
+    margin: 0;
     min-width: 64px;
     height: 36px;
     vertical-align: middle;
@@ -56,33 +56,6 @@
   .material-button::-moz-focus-inner {
     border: none;
   }
-
-  /*.material-button::before {*/
-  /*  content: "";*/
-  /*  position: absolute;*/
-  /*  top: 0;*/
-  /*  bottom: 0;*/
-  /*  left: 0;*/
-  /*  right: 0;*/
-  /*  background-color: rgb(255, 255, 255);*/
-  /*  opacity: 0;*/
-  /*  transition: opacity 0.2s;*/
-  /*}*/
-
-  /*.material-button::after {*/
-  /*  content: "";*/
-  /*  position: absolute;*/
-  /*  left: 50%;*/
-  /*  top: 50%;*/
-  /*  border-radius: 50%;*/
-  /*  padding: 50%;*/
-  /*  width: 32px;*/
-  /*  height: 32px;*/
-  /*  background-color: rgb( 255, 255, 255);*/
-  /*  opacity: 0;*/
-  /*  transform: translate(-50%, -50%) scale(1);*/
-  /*  transition: opacity 1s, transform 0.5s;*/
-  /*}*/
 
   .material-button:hover,
   .material-button:focus {

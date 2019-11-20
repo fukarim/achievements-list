@@ -8,4 +8,3 @@ const app = new App({
 window.app = app;
 
 export default app;
-

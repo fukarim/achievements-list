@@ -1,8 +1,7 @@
 <script>
-  import { navigate } from "svelte-routing";
+  import {navigate} from "svelte-routing";
   import AchievementForm from "../../components/AchievementForm.svelte"
   import Button from "../../components/Button.svelte"
-
 
   function onSubmit(formData) {
     fetch("/achievements", {
@@ -10,19 +9,20 @@
       credentials: 'same-origin',
       body: formData
     })
-            .then(() => navigate("/"))
-            .catch(err => console.log(err));
+      .then(() => navigate("/"))
   }
 </script>
 
 <main class="add-achievement">
   <AchievementForm onSubmit={onSubmit} />
 
-  <Button href="/" className="add-achievement__back-btn">Back</Button>
+  <Button href="/">Back</Button>
 </main>
 
 <style>
   .add-achievement {
+    min-height: 80vh;
+    margin: 10px;
     display: flex;
     justify-content: center;
     flex-direction: column;
