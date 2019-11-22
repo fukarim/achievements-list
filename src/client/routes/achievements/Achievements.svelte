@@ -1,15 +1,17 @@
 <script>
-    import { onMount } from 'svelte';
-
     import Button from '../../components/Button.svelte';
-    import AchievementsList from '../../components/AchievementsList.svelte';
+    import AchievementsList from './AchievementsList.svelte';
 
-    let list = [];
-
-    onMount(async () => {
+    async function getAchievementsList() {
         const res = await fetch(`/achievements`);
-        list = await res.json();
-    });
+        return  res.json();
+    }
+    let promise;
+
+    function loadData() {
+        promise = getAchievementsList()
+    }
+    loadData();
 </script>
 
 <svelte:head>
@@ -19,7 +21,14 @@
 <div class="add-achievement-button-wrapper">
     <Button href="add">Добавить достижение</Button>
 </div>
-<AchievementsList list={list} />
+
+{#await promise}
+    <p>...waiting</p>
+{:then list}
+    <AchievementsList list={list} reloadData={loadData} />
+{:catch error}
+    <p style="color: red">Error occurred in data loading.</p>
+{/await}
 
 <style>
     .add-achievement-button-wrapper {

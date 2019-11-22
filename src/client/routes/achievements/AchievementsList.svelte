@@ -1,17 +1,18 @@
 <script>
-    import { navigate } from "svelte-routing";
-
-    import Modal from './Modal.svelte';
+    import Modal from '../../components/Modal.svelte';
     import AchievementDetails from './AchievementDetails.svelte';
-    import Unlock from './icons/Unlock.svelte';
-    import Button from './Button.svelte';
+    import Unlock from '../../components/icons/Unlock.svelte';
+    import Button from '../../components/Button.svelte';
 
     export let list = [];
-    let currentAchievement = {};
+    export let reloadData = () => {};
     let isOpen = false;
     let currentAchievementIndex = 0;
 
     const DEFAULT_LOGO = "logo-placeholder.png";
+
+    $: isFirstUnlockedAchievement = currentAchievementIndex === 0 || getPrevUnlockedIndex() === -1;
+    $: isLastUnlockedAchievement = currentAchievementIndex === list.length - 1 || getNextUnlockedIndex() === -1;
 
     function formatDate(dateString) {
         if (!dateString) {
@@ -30,34 +31,47 @@
         })
     }
 
-    function getItemClasses(achievement) {
-        const mainClass = "achievement-list__item";
-        const classesMap = {
-            0: "achievement-list__item--bronze",
-            1: "achievement-list__item--silver",
-            2: "achievement-list__item--gold",
-            3: "achievement-list__item--brilliant"
-        };
-
-        return [mainClass, classesMap[achievement.type], ...!achievement.unlocked ? ["achievement-list__item--locked"] : []].join(" ")
-    }
-
     function onClickPrev() {
-        if (currentAchievementIndex === 0) {
+        const prevAchievementIndex = getPrevUnlockedIndex();
+        if (prevAchievementIndex === -1) {
             return false;
         }
-        // TODO: show only unlocked
-        currentAchievementIndex -= 1;
-        currentAchievement = list[currentAchievementIndex]
+        currentAchievementIndex = prevAchievementIndex;
+    }
+
+    function getPrevUnlockedIndex() {
+        let achievementIndex = currentAchievementIndex - 1;
+
+        while (achievementIndex >= 0) {
+            if (list[achievementIndex].unlocked) {
+                return achievementIndex
+            }
+            achievementIndex--;
+        }
+
+        return -1;
     }
 
     function onClickNext() {
-        if (currentAchievementIndex === list.length - 1) {
+        const nextAchievementIndex = getNextUnlockedIndex();
+
+        if (nextAchievementIndex === -1) {
             return false;
         }
-        // TODO: show only unlocked
-        currentAchievementIndex += 1;
-        currentAchievement = list[currentAchievementIndex]
+        currentAchievementIndex = nextAchievementIndex;
+    }
+
+    function getNextUnlockedIndex() {
+        let achievementIndex = currentAchievementIndex + 1;
+
+        while (achievementIndex < list.length) {
+            if (list[achievementIndex].unlocked) {
+                return achievementIndex
+            }
+            achievementIndex++;
+        }
+
+        return -1;
     }
 
     function onClickAchievement(achievement, index) {
@@ -66,11 +80,9 @@
         }
         isOpen = true;
         currentAchievementIndex = index;
-        currentAchievement = achievement
     }
 
     function onClickUnlock(achievementUid) {
-        // TODO: extract fetch
         fetch(`/achievements/${achievementUid}`, {
             method: "put",
             headers: {
@@ -83,13 +95,12 @@
                 date: new Date()
             })
         }).then(() => {
-            // TODO: do it in more proper way
-            location.reload()
+            reloadData()
         });
     }
 
     function onClickDelete() {
-        fetch(`/achievements/${currentAchievement.id}`, {
+        fetch(`/achievements/${list[currentAchievementIndex].id}`, {
             method: "delete",
             headers: {
                 'Accept': 'application/json',
@@ -97,16 +108,22 @@
             },
             credentials: 'same-origin',
         }).then(() => {
-            // TODO: do it in more proper way
-            location.reload()
+            reloadData()
         });
     }
 </script>
 
 <ul class="achievement-list">
     {#each list as achievement, index}
-        <li class={getItemClasses(achievement)} on:click={() => onClickAchievement(achievement, index)}>
-            <img class="achievement__logo" src={achievement.logo || DEFAULT_LOGO} alt={`${achievement.title} иконка`}>
+        <li class="achievement-list__item"
+            class:achievement-list__item--bronze={achievement.type === "0"}
+            class:achievement-list__item--silver={achievement.type === "1"}
+            class:achievement-list__item--gold={achievement.type === "2"}
+            class:achievement-list__item--brilliant={achievement.type === "3"}
+            class:achievement-list__item--locked={!achievement.unlocked}
+            on:click={() => onClickAchievement(achievement, index)}
+        >
+            <img class="achievement__logo" src={achievement.logo || DEFAULT_LOGO} alt={`${achievement.title} icon`}>
             <div>
                 <div class="achievement__title">{achievement.title}</div>
                 <div class="achievement__date">{formatDate(achievement.date)}</div>
@@ -118,27 +135,23 @@
     {/each}
 </ul>
 
-<!-- TODO: create a component for modal content ?-->
 <Modal isOpen={isOpen} onClose={() => isOpen = false}>
-    <Button href={`/edit/${currentAchievement.id}`}>Edit</Button>
-    <!--TODO Add danger styles to button-->
+    <Button href={`/edit/${list[currentAchievementIndex].id}`}>Edit</Button>
     <Button on:click={onClickDelete}>Remove</Button>
 
-    <!--TODO: wrap to button
-        create a component
-        add hover area around an arrow
-        add keyboard arrow handlers
-        add disabled state-->
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="achievement__prev" on:click={onClickPrev}>
-        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
-    </svg>
+    <button class="achievement__button achievement__button--prev" on:click={onClickPrev} disabled={isFirstUnlockedAchievement}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
+        </svg>
+    </button>
 
-    <AchievementDetails achievement={currentAchievement} />
+    <AchievementDetails achievement={list[currentAchievementIndex]} />
 
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="achievement__next"
-         on:click={onClickNext}>
-        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
-    </svg>
+    <button on:click={onClickNext} class="achievement__button achievement__button--next" disabled={isLastUnlockedAchievement}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/>
+        </svg>
+    </button>
 </Modal>
 
 <style>
@@ -209,32 +222,37 @@
         opacity: 1;
     }
 
-    .achievement-details {
-        padding: 0 50px;
-    }
-
-    .achievement-details__title {
-        alignment: center;
-    }
-
-    .achievement__prev,
-    .achievement__next {
-        width: 50px;
-        height: 50px;
+    .achievement__button {
         position: absolute;
         top: 50%;
+        background-color: transparent;
+        border: 0;
         cursor: pointer;
+    }
+
+    .achievement__button:disabled {
+        cursor: auto;
+    }
+
+    .achievement__button:hover svg {
+        fill: #000;
+    }
+
+    .achievement__button:disabled svg {
+        fill: #cccccc;
+    }
+
+    .achievement__button svg {
+        width: 50px;
+        height: 50px;
         fill: #aaaaaa;
     }
 
-    .achievement__next {
+    .achievement__button--next {
         right: 0;
     }
-
-    .achievement__prev:hover,
-    .achievement__next:hover {
-        fill: #000;
-        cursor: pointer;
+    .achievement__button--prev {
+        left: 0;
     }
 
 </style>

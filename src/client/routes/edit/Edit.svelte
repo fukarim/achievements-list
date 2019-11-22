@@ -6,7 +6,7 @@
 
   export let id = '';
 
-  let promise = getAchievement();
+  const promise = getAchievement();
 
   async function getAchievement() {
     const res = await fetch(`/achievements/${id}`);

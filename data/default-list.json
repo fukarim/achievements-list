@@ -7,7 +7,7 @@
     "photos": [],
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
-    "type": 2
+    "type": "2"
   },
   {
     "id": "1a95ad6e-0e58-4e0e-9ac5-3a7efdfa4665",
@@ -17,7 +17,7 @@
     "photos": [],
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
-    "type": 1
+    "type": "1"
   },
   {
     "id": "ef2f0926-4ac0-419b-8525-9569e3e3c81a",
@@ -27,7 +27,7 @@
     "photos": [],
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
-    "type": 3
+    "type": "3"
   },
   {
     "id": "765b7cee-2ee9-4119-bf62-70af0c91393c",
@@ -39,7 +39,7 @@
     ],
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
-    "type": 3
+    "type": "3"
   },
   {
     "id": "3f231059-5e30-4f39-bf6b-678de9025a47",
@@ -49,6 +49,6 @@
     "photos": [],
     "date": "Wed Jun 19 2019 18:43:00 GMT+0300 (Москва, стандартное время)",
     "unlocked": true,
-    "type": 2
+    "type": "2"
   }
 ]
